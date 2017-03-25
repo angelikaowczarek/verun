@@ -41,7 +41,6 @@ public class BackgroundScanService extends Service {
     private final Handler handler = new Handler();
     private ProximityManager proximityManager;
     private boolean isRunning;
-    private int devicesCount;
     private List<String> beacons = new ArrayList<>();
     NotificationBuilder notificationBuilder;
 
@@ -88,7 +87,6 @@ public class BackgroundScanService extends Service {
             @Override
             public void onServiceReady() {
                 proximityManager.startScanning();
-                devicesCount = 0;
                 Toast.makeText(BackgroundScanService.this, "Scanning service started.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -133,8 +131,6 @@ public class BackgroundScanService extends Service {
     }
 
     private void onDeviceDiscovered(RemoteBluetoothDevice device) {
-        devicesCount++;
-        //Send a broadcast with discovered device
         Intent intent = new Intent();
         intent.setAction(ACTION_DEVICE_DISCOVERED);
         intent.putExtra(EXTRA_DEVICE, device);
