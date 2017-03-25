@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_CODE_PERMISSIONS = 100;
     private Button startScanBtn;
     private Button stopScanBtn;
+    private Button refreshScanBtn;
     private Intent serviceIntent;
     private TextView beaconInfo;
     private List<RemoteBluetoothDevice> beacons = new ArrayList<>();
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         checkPermissions();
         setupButtons();
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         serviceIntent = new Intent(getApplicationContext(), BackgroundScanService.class);
         beaconInfo = (TextView) findViewById(R.id.beacon_info);
     }
@@ -67,9 +70,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupButtons() {
         startScanBtn = (Button) findViewById(R.id.start_scan_button);
-        startScanBtn.setOnClickListener(this);
         stopScanBtn = (Button) findViewById(R.id.stop_scan_button);
+        refreshScanBtn = (Button) findViewById(R.id.refresh_scan_button);
+        startScanBtn.setOnClickListener(this);
         stopScanBtn.setOnClickListener(this);
+        refreshScanBtn.setOnClickListener(this);
     }
 
     private void disableButton() {
@@ -81,11 +86,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_scan_button:
+                stopBackgroundService();
                 startBackgroundService();
                 break;
             case R.id.stop_scan_button:
                 beaconInfo.setText("Application is not scanning for beacons. Press start to begin scanning.");
+                beacons.clear();
                 stopBackgroundService();
+                break;
+            case R.id.refresh_scan_button:
+                beacons.clear();
+                beaconInfo.setText("Scanning...\n\n\n" + String.format("Number of stations around you: %d\n", beacons.size()));
                 break;
         }
     }
@@ -122,10 +133,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String displayMessage = "Scanning...\n\n\n";
             displayMessage += String.format("Number of stations around you: %d\n", beacons.size());
             for (RemoteBluetoothDevice beacon : beacons) {
-                Double distance = BigDecimal.valueOf(beacon.getDistance() * 100.0)
+                Double distance = BigDecimal.valueOf(beacon.getDistance())
                         .setScale(2, RoundingMode.HALF_UP)
                         .doubleValue();
-                displayMessage += "\no Station: " + beacon.getName() + "     Distance: " + distance + " m";
+                displayMessage += "\n    Station: " + beacon.getName() + ",       Distance: " + distance + " m";
             }
 
             beaconInfo.setText(displayMessage);
