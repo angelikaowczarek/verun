@@ -1,7 +1,10 @@
 package com.github.angelikaowczarek.verun.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -10,16 +13,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.angelikaowczarek.verun.R;
 import com.github.angelikaowczarek.verun.service.BackgroundScanService;
+import com.kontakt.sdk.android.common.profile.RemoteBluetoothDevice;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_CODE_PERMISSIONS = 100;
     private Button startScanBtn;
     private Intent serviceIntent;
+    private TextView beaconInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkPermissions();
         setupButton();
         serviceIntent = new Intent(getApplicationContext(), BackgroundScanService.class);
+        beaconInfo = (TextView) findViewById(R.id.beacon_info);
     }
 
     private void startBackgroundService() {
@@ -68,4 +75,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         startBackgroundService();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Register Broadcast receiver that will accept results from background scanning
+        IntentFilter intentFilter = new IntentFilter(BackgroundScanService.ACTION_DEVICE_DISCOVERED);
+        registerReceiver(scanningBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanningBroadcastReceiver);
+        super.onPause();
+    }
+
+    private final BroadcastReceiver scanningBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //Device discovered!
+            int devicesCount = intent.getIntExtra(BackgroundScanService.EXTRA_DEVICES_COUNT, 0);
+            RemoteBluetoothDevice device = intent.getParcelableExtra(BackgroundScanService.EXTRA_DEVICE);
+            beaconInfo.setText(String.format("Total discovered devices: %d\n\nLast scanned device:\n%s", devicesCount, device.toString()));
+        }
+    };
 }

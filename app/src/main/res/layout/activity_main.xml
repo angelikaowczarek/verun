@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context="com.github.angelikaowczarek.verun.activity.MainActivity">
 
+
+    <TextView
+        android:id="@+id/beacon_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="Devices discovered: 0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintVertical_bias="0.236"  />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +30,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintVertical_bias="0.236" />
+        app:layout_constraintVertical_bias="0.165" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -51,11 +51,10 @@ public class BackgroundScanService extends Service {
     public void onCreate() {
         super.onCreate();
         setupProximityManager();
+        notificationBuilder  = new NotificationBuilder(this, new Intent(this, MainActivity.class));
         isRunning = false;
         beacons.add("N2cT");
         beacons.add("TZCI");
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        notificationBuilder  = new NotificationBuilder(this, resultIntent);
     }
 
     private void setupProximityManager() {
