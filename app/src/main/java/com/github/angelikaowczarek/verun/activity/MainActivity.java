@@ -20,25 +20,28 @@ import com.github.angelikaowczarek.verun.R;
 import com.github.angelikaowczarek.verun.service.BackgroundScanService;
 import com.kontakt.sdk.android.common.profile.RemoteBluetoothDevice;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_CODE_PERMISSIONS = 100;
     private Button startScanBtn;
+    private Button stopScanBtn;
     private Intent serviceIntent;
     private TextView beaconInfo;
+    private List<RemoteBluetoothDevice> beacons = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermissions();
-        setupButton();
+        setupButtons();
         serviceIntent = new Intent(getApplicationContext(), BackgroundScanService.class);
         beaconInfo = (TextView) findViewById(R.id.beacon_info);
-    }
-
-    private void startBackgroundService() {
-        startService(serviceIntent);
     }
 
     //Since Android Marshmallow starting a Bluetooth Low Energy scan requires permission from location group.
@@ -62,20 +65,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void setupButton() {
+    private void setupButtons() {
         startScanBtn = (Button) findViewById(R.id.start_scan_button);
         startScanBtn.setOnClickListener(this);
+        stopScanBtn = (Button) findViewById(R.id.stop_scan_button);
+        stopScanBtn.setOnClickListener(this);
     }
 
     private void disableButton() {
         startScanBtn.setEnabled(false);
+        stopScanBtn.setEnabled(false);
     }
 
     @Override
     public void onClick(View v) {
-        startBackgroundService();
+        switch (v.getId()) {
+            case R.id.start_scan_button:
+                startBackgroundService();
+                break;
+            case R.id.stop_scan_button:
+                beaconInfo.setText("Application is not scanning for beacons. Press start to begin scanning.");
+                stopBackgroundService();
+                break;
+        }
     }
 
+    private void startBackgroundService() {
+        startService(serviceIntent);
+    }
+
+    private void stopBackgroundService() {
+        stopService(serviceIntent);
+    }
 
     @Override
     protected void onResume() {
@@ -94,10 +115,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final BroadcastReceiver scanningBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Device discovered!
-            int devicesCount = intent.getIntExtra(BackgroundScanService.EXTRA_DEVICES_COUNT, 0);
             RemoteBluetoothDevice device = intent.getParcelableExtra(BackgroundScanService.EXTRA_DEVICE);
-            beaconInfo.setText(String.format("Total discovered devices: %d\n\nLast scanned device:\n%s", devicesCount, device.toString()));
+            if (!beacons.contains(device)) {
+                beacons.add(device);
+            }
+            String displayMessage = "Scanning...\n\n\n";
+            displayMessage += String.format("Number of stations around you: %d\n", beacons.size());
+            for (RemoteBluetoothDevice beacon : beacons) {
+                Double distance = BigDecimal.valueOf(beacon.getDistance() * 100.0)
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue();
+                displayMessage += "\no Station: " + beacon.getName() + "     Distance: " + distance + " m";
+            }
+
+            beaconInfo.setText(displayMessage);
         }
     };
 }

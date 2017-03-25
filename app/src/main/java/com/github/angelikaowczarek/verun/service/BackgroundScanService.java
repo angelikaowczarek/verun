@@ -35,7 +35,6 @@ public class BackgroundScanService extends Service {
     public static final String TAG = "BackgroundScanService";
     public static final String ACTION_DEVICE_DISCOVERED = "DeviceDiscoveredAction";
     public static final String EXTRA_DEVICE = "DeviceExtra";
-    public static final String EXTRA_DEVICES_COUNT = "DevicesCountExtra";
 
     private static final long TIMEOUT = TimeUnit.SECONDS.toMillis(3000);
 
@@ -110,7 +109,7 @@ public class BackgroundScanService extends Service {
         return new SimpleIBeaconListener() {
             @Override
             public void onIBeaconDiscovered(IBeaconDevice ibeacon, IBeaconRegion region) {
-                onDeviceDiscovered(ibeacon);
+//                onDeviceDiscovered(ibeacon);
                 Log.i(TAG, "onIBeaconDiscovered: " + ibeacon.toString());
             }
         };
@@ -123,7 +122,6 @@ public class BackgroundScanService extends Service {
                 onDeviceDiscovered(eddystone);
                 Log.i(TAG, "onEddystoneDiscovered: " + eddystone.toString());
                 if (beacons.contains(eddystone.getUniqueId())) {
-                    System.out.println("MOJ BEACONIK SUPCIO!!!!!!!!!!!!!!!!!!!!");
 
                     NotificationManager notificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -140,7 +138,6 @@ public class BackgroundScanService extends Service {
         Intent intent = new Intent();
         intent.setAction(ACTION_DEVICE_DISCOVERED);
         intent.putExtra(EXTRA_DEVICE, device);
-        intent.putExtra(EXTRA_DEVICES_COUNT, devicesCount);
         sendBroadcast(intent);
     }
 

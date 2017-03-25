@@ -7,55 +7,74 @@
     tools:context="com.github.angelikaowczarek.verun.activity.MainActivity">
 
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="361dp"
+        android:layout_height="207dp"
+        app:srcCompat="@android:drawable/editbox_background"
+        tools:layout_editor_absoluteY="-11dp"
+        tools:layout_editor_absoluteX="-6dp" />
+
+    <TextView
+        android:layout_width="177dp"
+        android:layout_height="161dp"
+        android:gravity="center"
+        android:text="WHAT'S ON:\nBeauty and the Beast\nCHiPs\nGet out\nLogan\nLife\nSmurfs: The Lost Village\n"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.074"
+        app:layout_constraintHorizontal_bias="0.502" />
+
     <TextView
         android:id="@+id/beacon_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_width="339dp"
+        android:layout_height="194dp"
         tools:text="Devices discovered: 0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintVertical_bias="0.236"  />
+        app:layout_constraintVertical_bias="0.81"
+        app:layout_constraintHorizontal_bias="0.355" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="This app will inform you about VR stations near to you."
+        android:text="Do you want to find stations near to you?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintVertical_bias="0.165" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Click the button below to enable scanning:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.542" />
+        app:layout_constraintVertical_bias="0.396" />
 
     <Button
         android:id="@+id/start_scan_button"
-        android:layout_width="275dp"
-        android:layout_height="48dp"
+        android:layout_width="169dp"
+        android:layout_height="44dp"
         android:layout_marginTop="16dp"
         android:text="Start scanning"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintVertical_bias="0.657" />
+        app:layout_constraintHorizontal_bias="0.074"
+        app:layout_constraintVertical_bias="0.436" />
 
+    <Button
+        android:id="@+id/stop_scan_button"
+        android:layout_width="169dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:text="Stop scanning"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.925"
+        app:layout_constraintVertical_bias="0.436" />
 
 
 </android.support.constraint.ConstraintLayout>
